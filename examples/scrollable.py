@@ -1,3 +1,10 @@
+'''
+A situation where 'tab_line_stays_inside' needs to be True.
+
+* tab_line_stays_inside が False だとScrolViewによって線が切り取ら
+  れてしまい、線の幅が半分になってしまう。
+'''
+
 from kivy.app import runTouchApp
 from kivy.factory import Factory
 from kivy.lang import Builder
@@ -30,8 +37,8 @@ BoxLayout:
         height: 80
         MyTabs:
             id: tabs
-            style: 'top'
-            line_color: '#AAAAFF'
+            tab_style_h: 'top'
+            tab_line_color: '#AAAAFF'
             padding: 20, 0
             spacing: 20
             size_hint: None, 1
