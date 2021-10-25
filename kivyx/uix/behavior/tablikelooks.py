@@ -104,7 +104,7 @@ class KXTablikeLooksBehavior:
         y2 = self_top = self.top
         x1 = self_x = self.x
         x2 = self_right = self.right
-        if self._is_horizontal:
+        if is_horizontal:
             if self.tab_style_h == 'bottom':
                 y1, y2 = y2, y1
         else:
@@ -150,7 +150,7 @@ class KXTablikeLooksBehavior:
         y2 = self_top
         x1 = self_x
         x2 = self_right
-        if self._is_horizontal:
+        if is_horizontal:
             if self.tab_style_h == 'bottom':
                 y1, y2 = y2, y1
         else:

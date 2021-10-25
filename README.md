@@ -1,7 +1,6 @@
 # KXTablikeLooksBehavior
 
-Bored of `kivy.uix.tabbedpanel`'s design?
-Try this instead.  
+If you are bored with `kivy.uix.tabbedpanel`'s design, you may like this.  
 [Youtube](https://www.youtube.com/watch?v=jdaXuw-QGLo)  
 ![](screenshot/0001.png)
 ![](screenshot/0002.png)
@@ -18,4 +17,4 @@ MIT
 
 ## Test Environment
 
-- CPython 3.8.10 + Kivy2.0.0
+- CPython 3.8.12 + Kivy2.0.0
