@@ -16,6 +16,10 @@ from kivy.properties import (
 from kivy.uix.behaviors.togglebutton import ToggleButtonBehavior
 
 
+def is_horizontal(boxlayout) -> bool:
+    return boxlayout.orientation in ('horizontal', 'lr', 'rl')
+
+
 class KXTablikeLooksBehavior:
     tab_style_h = OptionProperty('top', options=('top', 'bottom', ))
     tab_style_v = OptionProperty('left', options=('left', 'right'))
@@ -24,9 +28,6 @@ class KXTablikeLooksBehavior:
     tab_line_width = NumericProperty(2)
     _tab_next_highlight = ObjectProperty(None, allownone=True)
 
-    @property
-    def _is_horizontal(self):
-        return self.orientation in ('horizontal', 'lr', 'rl')
 
     def __init__(self, **kwargs):
         from kivy.graphics import InstructionGroup, Color, Line
@@ -68,17 +69,17 @@ class KXTablikeLooksBehavior:
 
     def add_widget(self, widget, *args, **kwargs):
         if isinstance(widget, ToggleButtonBehavior):
-            widget.bind(state=self._on_child_state)
+            widget.bind(state=self._on_tab_child_state)
         return super().add_widget(widget, *args, **kwargs)
 
     def remove_widget(self, widget, *args, **kwargs):
         if widget.__self__ is self._tab_current_highlight:
             self._tab_next_highlight = None
         if isinstance(widget, ToggleButtonBehavior):
-            widget.unbind(state=self._on_child_state)
+            widget.unbind(state=self._on_tab_child_state)
         return super().remove_widget(widget, *args, **kwargs)
 
-    def _on_child_state(self, widget, state):
+    def _on_tab_child_state(self, widget, state):
         self._tab_next_highlight = widget if state == 'down' else None
 
     def _tab_rebind(self, *args):
@@ -92,11 +93,11 @@ class KXTablikeLooksBehavior:
         if next is not None:
             next.bind(pos=trigger, size=trigger)
 
-    def _tab_update_canvas_ver_normal(self, dt):
+    def _tab_update_canvas_ver_normal(self, dt, is_horizontal=is_horizontal):
         spacing = self.spacing
         cur = self._tab_current_highlight
         inst_line = self._tab_inst_line
-        is_horizontal = self._is_horizontal
+        is_horizontal = is_horizontal(self)
         y1 = self_y = self.y
         y2 = self_top = self.top
         x1 = self_x = self.x
@@ -133,11 +134,11 @@ class KXTablikeLooksBehavior:
                 x1, self_top,
             )
 
-    def _tab_update_canvas_ver_inside(self, dt):
+    def _tab_update_canvas_ver_inside(self, dt, is_horizontal=is_horizontal):
         spacing = self.spacing
         cur = self._tab_current_highlight
         inst_line = self._tab_inst_line
-        is_horizontal = self._is_horizontal
+        is_horizontal = is_horizontal(self)
         lw = self.tab_line_width
         self_y = self.y + lw
         self_top = self.top - lw
