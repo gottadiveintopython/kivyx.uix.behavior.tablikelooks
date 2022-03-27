@@ -33,14 +33,13 @@ class KXTablikeLooksBehavior:
         self._tab_inst_color = Color()
         self._tab_inst_line = Line(joint='bevel', cap='square', width=2)
         self._tab_current_highlight = None
-        self._tab_actual_update_canvas = self._tab_update_canvas_ver_inside
         super().__init__(**kwargs)
         inst_group = InstructionGroup()
         inst_group.add(self._tab_inst_color)
         inst_group.add(self._tab_inst_line)
         self.canvas.after.add(inst_group)
         self._tab_trigger_update_canvas = trigger_update_canvas = \
-            Clock.create_trigger(self._tab_update_canvas, 0)
+            Clock.create_trigger(self._tab_update_canvas_ver_inside, 0)
         self._tab_trigger_rebind = trigger_rebind = \
             Clock.create_trigger(self._tab_rebind, 0)
         f = self.fbind
@@ -52,13 +51,14 @@ class KXTablikeLooksBehavior:
         f('orientation', trigger_rebind)
         f('tab_style_h', trigger_rebind)
         f('tab_style_v', trigger_rebind)
-        f('tab_line_stays_inside', trigger_update_canvas)
         f('_tab_next_highlight', trigger_rebind)
         trigger_rebind()
 
-    def on_tab_line_stays_inside(self, __, tab_line_stays_inside):
-        self._tab_actual_update_canvas = self._tab_update_canvas_ver_inside \
-            if tab_line_stays_inside else self._tab_update_canvas_ver_normal
+    def on_tab_line_stays_inside(self, __, inside):
+        t = self._tab_trigger_update_canvas
+        t.callback = self._tab_update_canvas_ver_inside if inside else self._tab_update_canvas_ver_normal
+        t.release()
+        t()
 
     def on_tab_line_color(self, __, color):
         self._tab_inst_color.rgba = color
@@ -92,10 +92,7 @@ class KXTablikeLooksBehavior:
         if next is not None:
             next.bind(pos=trigger, size=trigger)
 
-    def _tab_update_canvas(self, *args):
-        self._tab_actual_update_canvas()
-
-    def _tab_update_canvas_ver_normal(self):
+    def _tab_update_canvas_ver_normal(self, dt):
         spacing = self.spacing
         cur = self._tab_current_highlight
         inst_line = self._tab_inst_line
@@ -136,7 +133,7 @@ class KXTablikeLooksBehavior:
                 x1, self_top,
             )
 
-    def _tab_update_canvas_ver_inside(self):
+    def _tab_update_canvas_ver_inside(self, dt):
         spacing = self.spacing
         cur = self._tab_current_highlight
         inst_line = self._tab_inst_line

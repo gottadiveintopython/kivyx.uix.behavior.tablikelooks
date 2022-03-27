@@ -38,7 +38,7 @@ BoxLayout:
             on_press:
                 content.text = (
                 "C does not inherit from ToggleButtonBehavior, \\n "
-                "which means it isn't counted as a tab by the KXTablikeLooksBehavior \\n "
+                "which means it doesn't count as a tab by the KXTablikeLooksBehavior \\n "
                 "so pressing it does not affect the line"
                 )
     Label:
